@@ -21,12 +21,16 @@ export default function SignupPage() {
   const [userExists, setUserExists] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
-  // ✅ correct session-based redirect
+  // redirect if logged in
   useEffect(() => {
     if (session?.user) {
       router.push('/profile')
     }
   }, [session, router])
+
+  const isValidEmail = (email: string) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+  }
 
   const handleSignup = async () => {
     if (isLoading) return
@@ -34,9 +38,30 @@ export default function SignupPage() {
     setError("")
     setUserExists(false)
 
-    // 🔒 strict validation
+    // ✅ required fields
+    if (!name.trim()) {
+      setError("Name is required")
+      return
+    }
+
+    if (!email.trim()) {
+      setError("Email is required")
+      return
+    }
+
+    // ✅ email format
+    if (!isValidEmail(email)) {
+      setError("Please enter a valid email address")
+      return
+    }
+
     if (!password || !confirmPassword) {
       setError("Password is required")
+      return
+    }
+
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters")
       return
     }
 
@@ -54,7 +79,7 @@ export default function SignupPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          email,
+          email: email.toLowerCase(), // ✅ normalize email
           password,
           name,
         }),
@@ -63,7 +88,10 @@ export default function SignupPage() {
       const data = await res.json()
 
       if (!res.ok) {
-        if (data.error === "User already exists") {
+        if (
+          data.error === "User already exists" ||
+          data.error?.toLowerCase().includes("unique")
+        ) {
           setUserExists(true)
           setError("Account already exists. Please login.")
         } else {
@@ -73,14 +101,7 @@ export default function SignupPage() {
         setIsLoading(false)
         return
       }
-
-      // ✅ login after signup
-      await signIn("credentials", {
-        email,
-        password,
-        redirect: true,
-        callbackUrl: "/",
-      })
+      router.push("/login")
 
     } catch (err) {
       setError("Network error")

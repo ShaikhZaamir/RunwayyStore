@@ -1,9 +1,7 @@
 import NextAuth from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 import { PrismaAdapter } from "@next-auth/prisma-adapter"
-import { PrismaClient } from "@prisma/client"
 import bcrypt from "bcrypt"
-
 import { prisma } from "@/lib/prisma"
 
 const handler = NextAuth({
@@ -18,16 +16,20 @@ const handler = NextAuth({
             },
 
             async authorize(credentials) {
+                // ✅ basic validation
                 if (!credentials?.email || !credentials?.password) {
-                    throw new Error("Missing credentials")
+                    return null
                 }
 
+                const email = credentials.email.toLowerCase()
+
                 const user = await prisma.user.findUnique({
-                    where: { email: credentials.email },
+                    where: { email },
                 })
 
+                // ❌ don't throw — return null
                 if (!user || !user.password) {
-                    throw new Error("User not found")
+                    return null
                 }
 
                 const isValid = await bcrypt.compare(
@@ -36,9 +38,10 @@ const handler = NextAuth({
                 )
 
                 if (!isValid) {
-                    throw new Error("Invalid password")
+                    return null
                 }
 
+                // ✅ success
                 return {
                     id: user.id,
                     email: user.email,
@@ -57,7 +60,7 @@ const handler = NextAuth({
         async jwt({ token, user }) {
             if (user) {
                 token.id = user.id
-                token.role = user.role
+                token.role = (user as any).role
             }
             return token
         },

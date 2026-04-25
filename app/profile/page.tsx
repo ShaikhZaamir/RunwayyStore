@@ -3,29 +3,45 @@
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Header from '@/components/Header'
-import { useAuth } from '@/lib/auth-context'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Edit2, LogOut, Package } from 'lucide-react'
+import { useSession, signOut } from "next-auth/react"
 
 export default function ProfilePage() {
   const router = useRouter()
-  const { user, logout, updateProfile } = useAuth()
-  const [isEditing, setIsEditing] = useState(false)
-  const [name, setName] = useState(user?.name || '')
+  const { data: session, status } = useSession()
 
-  // Redirect if not logged in
-  if (!user) {
-    router.push('/login')
+  const user = session?.user
+
+  const [isEditing, setIsEditing] = useState(false)
+  const [name, setName] = useState('')
+
+  // ✅ set name when session loads
+  useEffect(() => {
+    if (user?.name) {
+      setName(user.name)
+    }
+  }, [user])
+
+  // ✅ redirect if not logged in (FIXED)
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push('/login')
+    }
+  }, [status, router])
+
+  // ✅ prevent render while loading
+  if (status === "loading") {
     return null
   }
 
   const handleSaveName = async () => {
-    await updateProfile(name)
+    // ⚠️ backend update later
     setIsEditing(false)
   }
 
-  const handleLogout = () => {
-    logout()
+  const handleLogout = async () => {
+    await signOut({ redirect: false })
     router.push('/')
   }
 
@@ -39,7 +55,7 @@ export default function ProfilePage() {
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
               <h1 className="text-3xl font-bold text-foreground mb-2">My Account</h1>
-              <p className="text-muted-foreground">{user.email}</p>
+              <p className="text-muted-foreground">{user?.email}</p>
             </div>
             <button
               onClick={handleLogout}
@@ -93,7 +109,7 @@ export default function ProfilePage() {
                     <button
                       onClick={() => {
                         setIsEditing(false)
-                        setName(user.name)
+                        setName(user?.name || '')
                       }}
                       className="px-4 py-2 border border-border rounded-lg hover:bg-secondary transition"
                     >
@@ -104,60 +120,22 @@ export default function ProfilePage() {
               ) : (
                 <div>
                   <p className="text-sm text-muted-foreground mb-1">Name</p>
-                  <p className="text-lg text-foreground font-semibold">{user.name}</p>
+                  <p className="text-lg text-foreground font-semibold">{user?.name}</p>
                 </div>
               )}
             </div>
 
-            {/* Order History */}
+            {/* Order History (placeholder for now) */}
             <div className="bg-white rounded-lg shadow-md border border-border p-8">
               <h2 className="text-xl font-bold text-foreground mb-6">Order History</h2>
 
-              {user.orders && user.orders.length > 0 ? (
-                <div className="space-y-4">
-                  {user.orders.map((order) => (
-                    <div key={order.id} className="border border-border rounded-lg p-4 hover:bg-secondary transition">
-                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-3">
-                        <div>
-                          <p className="font-semibold text-foreground">Order {order.id}</p>
-                          <p className="text-sm text-muted-foreground">{order.date}</p>
-                        </div>
-                        <div className="flex items-center gap-4">
-                          <div className="text-right">
-                            <p className="text-sm text-muted-foreground">Total</p>
-                            <p className="text-lg font-bold text-foreground">${order.total.toFixed(2)}</p>
-                          </div>
-                          <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                            order.status === 'completed' ? 'bg-green-100 text-green-800' :
-                            order.status === 'shipped' ? 'bg-blue-100 text-blue-800' :
-                            'bg-yellow-100 text-yellow-800'
-                          }`}>
-                            {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
-                          </span>
-                        </div>
-                      </div>
-                      <div className="text-sm text-muted-foreground">
-                        <p className="mb-2">{order.items.length} item(s)</p>
-                        <ul className="list-disc list-inside space-y-1">
-                          {order.items.map((item, idx) => (
-                            <li key={idx}>
-                              {item.name} × {item.quantity} - ${item.price.toFixed(2)}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center py-12">
-                  <Package className="w-12 h-12 text-muted-foreground mx-auto mb-4 opacity-50" />
-                  <p className="text-muted-foreground mb-4">No orders yet</p>
-                  <Link href="/shop" className="text-primary font-semibold hover:underline">
-                    Start shopping
-                  </Link>
-                </div>
-              )}
+              <div className="text-center py-12">
+                <Package className="w-12 h-12 text-muted-foreground mx-auto mb-4 opacity-50" />
+                <p className="text-muted-foreground mb-4">No orders yet</p>
+                <Link href="/shop" className="text-primary font-semibold hover:underline">
+                  Start shopping
+                </Link>
+              </div>
             </div>
           </div>
 
