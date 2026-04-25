@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
+import Providers from "./providers"
 import { AuthProvider } from '@/lib/auth-context'
 import { CartProvider } from '@/lib/cart-provider'
 
@@ -13,20 +14,20 @@ export const metadata: Metadata = {
   description: 'Discover premium fashion and apparel at Runwayy Store. Shop trending styles for every occasion.',
   generator: 'v0.app',
   icons: {
-    icon: [
-      {
-        url: '/icon-light-32x32.png',
-        media: '(prefers-color-scheme: light)',
-      },
-      {
-        url: '/icon-dark-32x32.png',
-        media: '(prefers-color-scheme: dark)',
-      },
-      {
-        url: '/icon.svg',
-        type: 'image/svg+xml',
-      },
-    ],
+    // icon: [
+    //   {
+    //     url: '/icon-light-32x32.png',
+    //     media: '(prefers-color-scheme: light)',
+    //   },
+    //   {
+    //     url: '/icon-dark-32x32.png',
+    //     media: '(prefers-color-scheme: dark)',
+    //   },
+    //   {
+    //     url: '/icon.svg',
+    //     type: 'image/svg+xml',
+    //   },
+    // ],
     apple: '/apple-icon.png',
   },
 }
@@ -39,11 +40,13 @@ export default function RootLayout({
   return (
     <html lang="en" className="bg-background">
       <body className="font-sans antialiased bg-background text-foreground">
-        <CartProvider>
-          <AuthProvider>
-            {children}
-          </AuthProvider>
-        </CartProvider>
+        <Providers>
+          <CartProvider>
+            <AuthProvider>
+              {children}
+            </AuthProvider>
+          </CartProvider>
+        </Providers>
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>

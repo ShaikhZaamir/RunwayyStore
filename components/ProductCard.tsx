@@ -58,7 +58,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           </div>
 
           {/* Price */}
-          <p className="text-lg font-bold text-primary">${product.price.toFixed(2)}</p>
+          <p className="text-lg font-bold text-primary">₹{product.price.toFixed(2)}</p>
         </div>
       </div>
     </Link>

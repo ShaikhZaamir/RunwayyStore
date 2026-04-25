@@ -52,7 +52,7 @@ export default function AdminDashboard() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-muted-foreground text-sm mb-1">Revenue</p>
-                <p className="text-3xl font-bold text-foreground">$45,231</p>
+                <p className="text-3xl font-bold text-foreground">₹45,231</p>
               </div>
               <TrendingUp className="w-12 h-12 text-primary/20" />
             </div>

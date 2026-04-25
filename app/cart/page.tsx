@@ -61,7 +61,7 @@ export default function Cart() {
                   <div className="flex-1 flex flex-col justify-between">
                     <div>
                       <h3 className="font-semibold text-foreground">{item.name}</h3>
-                      <p className="text-primary font-bold">${item.price.toFixed(2)}</p>
+                      <p className="text-primary font-bold">₹{item.price.toFixed(2)}</p>
                     </div>
 
                     {/* Quantity Controls */}
@@ -84,7 +84,7 @@ export default function Cart() {
 
                   {/* Price & Remove */}
                   <div className="flex flex-col items-end justify-between">
-                    <p className="font-bold text-foreground">${(item.price * item.quantity).toFixed(2)}</p>
+                    <p className="font-bold text-foreground">₹{(item.price * item.quantity).toFixed(2)}</p>
                     <button
                       onClick={() => removeItem(item.id)}
                       className="text-red-600 hover:text-red-700 transition"
@@ -122,23 +122,23 @@ export default function Cart() {
               <div className="space-y-3 border-t border-border pt-4">
                 <div className="flex justify-between text-foreground">
                   <span>Subtotal</span>
-                  <span>${subtotal.toFixed(2)}</span>
+                  <span>₹{subtotal.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-foreground">
                   <span>Shipping</span>
                   <span className={shipping === 0 ? 'text-primary font-semibold' : ''}>
-                    {shipping === 0 ? 'FREE' : `$${shipping.toFixed(2)}`}
+                    {shipping === 0 ? 'FREE' : `₹${shipping.toFixed(2)}`}
                   </span>
                 </div>
                 <div className="flex justify-between text-foreground">
                   <span>Tax</span>
-                  <span>${tax.toFixed(2)}</span>
+                  <span>₹{tax.toFixed(2)}</span>
                 </div>
               </div>
 
               <div className="border-t border-border pt-4 flex justify-between text-lg font-bold">
                 <span>Total</span>
-                <span className="text-primary">${finalTotal.toFixed(2)}</span>
+                <span className="text-primary">₹{finalTotal.toFixed(2)}</span>
               </div>
 
               <button className="w-full bg-primary text-primary-foreground py-3 rounded-lg font-semibold hover:bg-primary/90 transition">
@@ -154,7 +154,7 @@ export default function Cart() {
               {subtotal > 0 && subtotal <= 50 && (
                 <div className="bg-primary/10 border border-primary/20 rounded-lg p-3 text-sm">
                   <p className="text-foreground font-semibold">
-                    Add ${(50 - subtotal).toFixed(2)} more for free shipping!
+                    Add ₹{(50 - subtotal).toFixed(2)} more for free shipping!
                   </p>
                 </div>
               )}
