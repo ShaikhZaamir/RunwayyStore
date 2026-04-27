@@ -30,7 +30,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         {/* Image Container */}
         <div className="relative w-full h-64 overflow-hidden bg-secondary">
           <Image
-            src={product.image}
+            src={product.image || '/placeholder.png'}
             alt={product.name}
             fill
             className="object-cover group-hover:scale-105 transition duration-300"

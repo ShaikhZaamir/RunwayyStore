@@ -165,7 +165,7 @@ export default function AdminDashboard() {
 
         {/* Quick Links */}
         <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Link href="/shop" className="bg-primary text-primary-foreground p-4 rounded-lg font-semibold hover:bg-primary/90 transition text-center">
+          <Link href="/admin/products" className="bg-primary text-primary-foreground p-4 rounded-lg font-semibold hover:bg-primary/90 transition text-center">
             View Products
           </Link>
           <button className="bg-secondary border border-border p-4 rounded-lg font-semibold hover:bg-border/50 transition">

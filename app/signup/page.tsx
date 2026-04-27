@@ -210,7 +210,7 @@ export default function SignupPage() {
                   <p className={`text-sm mt-1 ${password === confirmPassword ? "text-green-500" : "text-red-500"
                     }`}>
                     {password === confirmPassword
-                      ? "Passwords match"
+                      ? ""
                       : "Passwords do not match"}
                   </p>
                 )}

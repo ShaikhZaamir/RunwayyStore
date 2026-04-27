@@ -1,10 +1,11 @@
-import NextAuth from "next-auth"
+import NextAuth, { type NextAuthOptions } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 import { PrismaAdapter } from "@next-auth/prisma-adapter"
 import bcrypt from "bcrypt"
 import { prisma } from "@/lib/prisma"
 
-const handler = NextAuth({
+// ✅ Properly typed
+export const authOptions: NextAuthOptions = {
     adapter: PrismaAdapter(prisma),
 
     providers: [
@@ -16,7 +17,6 @@ const handler = NextAuth({
             },
 
             async authorize(credentials) {
-                // ✅ basic validation
                 if (!credentials?.email || !credentials?.password) {
                     return null
                 }
@@ -27,7 +27,6 @@ const handler = NextAuth({
                     where: { email },
                 })
 
-                // ❌ don't throw — return null
                 if (!user || !user.password) {
                     return null
                 }
@@ -41,7 +40,6 @@ const handler = NextAuth({
                     return null
                 }
 
-                // ✅ success
                 return {
                     id: user.id,
                     email: user.email,
@@ -53,13 +51,13 @@ const handler = NextAuth({
     ],
 
     session: {
-        strategy: "jwt",
+        strategy: "jwt" as const, // ✅ fix type error
     },
 
     callbacks: {
         async jwt({ token, user }) {
             if (user) {
-                token.id = user.id
+                token.id = (user as any).id
                 token.role = (user as any).role
             }
             return token
@@ -77,6 +75,8 @@ const handler = NextAuth({
     pages: {
         signIn: "/login",
     },
-})
+}
+
+const handler = NextAuth(authOptions)
 
 export { handler as GET, handler as POST }

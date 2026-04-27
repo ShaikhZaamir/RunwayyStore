@@ -127,6 +127,15 @@ model Order {
 
   status    OrderStatus @default(pending)
 
+  total     Int
+
+  // Basic shipping info (keep simple for now)
+  name      String
+  address   String
+  city      String
+  postal    String
+  country   String
+
   items     OrderItem[]
 
   createdAt DateTime @default(now())
@@ -147,4 +156,6 @@ model OrderItem {
   price     Int
 
   createdAt DateTime @default(now())
+
+  @@unique([orderId, productId])
 }
