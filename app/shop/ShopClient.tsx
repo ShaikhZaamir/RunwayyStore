@@ -24,7 +24,7 @@ export default function ShopClient({ products }: { products: any[] }) {
             case 'price-high':
                 return b.price - a.price
             case 'rating':
-                return b.rating - a.rating
+                return 0
             default:
                 return 0
         }

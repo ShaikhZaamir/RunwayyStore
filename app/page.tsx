@@ -1,11 +1,31 @@
 import Header from '@/components/Header'
 import ProductCard from '@/components/ProductCard'
-import { MOCK_PRODUCTS } from '@/lib/products'
 import { ArrowRight, Truck, RotateCcw, Shield } from 'lucide-react'
 import Image from 'next/image'
 
-export default function Home() {
-  const featuredProducts = MOCK_PRODUCTS.slice(0, 4)
+type Product = {
+  id: string
+  name: string
+  price: number
+  image?: string
+  category?: string
+}
+
+async function getProducts() {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/products`, {
+    cache: 'no-store',
+  })
+
+  if (!res.ok) {
+    throw new Error('Failed to fetch products')
+  }
+
+  return res.json()
+}
+
+export default async function Home() {
+  const products: Product[] = await getProducts()
+  const featuredProducts = products.slice(0, 4)
 
   return (
     <div className="min-h-screen bg-background">

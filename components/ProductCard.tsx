@@ -2,9 +2,16 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { ShoppingCart, Star } from 'lucide-react'
-import { Product } from '@/lib/products'
+import { ShoppingCart } from 'lucide-react'
 import { useCart } from '@/lib/cart-provider'
+
+type Product = {
+  id: string
+  name: string
+  price: number
+  image?: string
+  category?: string
+}
 
 interface ProductCardProps {
   product: Product
@@ -21,13 +28,15 @@ export default function ProductCard({ product }: ProductCardProps) {
       name: product.name,
       price: product.price,
       quantity: 1,
-      image: product.image,
+      image: product.image || '/placeholder.png',
     })
   }
+
   return (
     <Link href={`/products/${product.id}`}>
       <div className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition group cursor-pointer h-full">
-        {/* Image Container */}
+
+        {/* Image */}
         <div className="relative w-full h-64 overflow-hidden bg-secondary">
           <Image
             src={product.image || '/placeholder.png'}
@@ -44,21 +53,20 @@ export default function ProductCard({ product }: ProductCardProps) {
         </div>
 
         {/* Content */}
-        <div className="p-4 space-y-3">
-          <p className="text-xs font-semibold text-muted-foreground uppercase">{product.category}</p>
-          <h3 className="font-semibold text-foreground line-clamp-2">{product.name}</h3>
+        <div className="p-4 space-y-2">
+          {product.category && (
+            <p className="text-xs font-semibold text-muted-foreground uppercase">
+              {product.category}
+            </p>
+          )}
 
-          {/* Rating */}
-          <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1">
-              <Star className="w-4 h-4 fill-primary text-primary" />
-              <span className="text-sm font-medium">{product.rating}</span>
-            </div>
-            <span className="text-xs text-muted-foreground">({product.reviews})</span>
-          </div>
+          <h3 className="font-semibold text-foreground line-clamp-2">
+            {product.name}
+          </h3>
 
-          {/* Price */}
-          <p className="text-lg font-bold text-primary">₹{product.price.toFixed(2)}</p>
+          <p className="text-lg font-bold text-primary">
+            ₹{product.price.toFixed(2)}
+          </p>
         </div>
       </div>
     </Link>

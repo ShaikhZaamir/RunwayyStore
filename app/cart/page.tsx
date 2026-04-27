@@ -50,7 +50,7 @@ export default function Cart() {
                   {/* Image */}
                   <div className="relative w-24 h-24 flex-shrink-0 bg-secondary rounded-md overflow-hidden">
                     <Image
-                      src={item.image}
+                      src={item.image  || '/placeholder.png'}
                       alt={item.name}
                       fill
                       className="object-cover"
