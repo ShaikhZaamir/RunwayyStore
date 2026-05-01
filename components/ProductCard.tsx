@@ -28,7 +28,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       name: product.name,
       price: product.price,
       quantity: 1,
-      image: product.image || '/placeholder.png',
+      image: product.image || '/checked1.jpg',
     })
   }
 
@@ -39,10 +39,10 @@ export default function ProductCard({ product }: ProductCardProps) {
         {/* Image */}
         <div className="relative w-full h-64 overflow-hidden bg-secondary">
           <Image
-            src={product.image || '/placeholder.png'}
+            src={product.image || '/checked1.jpg'}
             alt={product.name}
             fill
-            className="object-cover group-hover:scale-105 transition duration-300"
+            className="object-contain group-hover:scale-105 transition duration-300"
           />
           <button
             className="absolute bottom-2 right-2 bg-primary text-primary-foreground p-2 rounded-full opacity-0 group-hover:opacity-100 transition"

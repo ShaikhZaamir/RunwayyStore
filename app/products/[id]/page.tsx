@@ -92,7 +92,7 @@ export default function ProductDetail() {
 
           <div className="relative h-66 bg-secondary rounded-lg overflow-hidden">
             <Image
-              src={product.image || '/placeholder.png'}
+              src={product.image || '/checked1.jpg'}
               alt={product.name}
               fill
               className="object-contain"
@@ -160,7 +160,7 @@ export default function ProductDetail() {
                     name: product.name,
                     price: product.price,
                     quantity,
-                    image: product.image || '/placeholder.png',
+                    image: product.image || '/checked1.jpg',
                   })
                 }
                 className="flex-1 bg-primary text-primary-foreground px-6 py-3 rounded-lg font-semibold flex items-center justify-center gap-2"

@@ -81,20 +81,22 @@ export default function Header() {
 
         {/* Mobile Navigation */}
         {isOpen && (
-          <nav className="md:hidden pb-4 space-y-2">
-            <Link href="/" className="block px-2 py-2 text-foreground hover:text-primary transition">
-              Home
-            </Link>
-            <Link href="/shop" className="block px-2 py-2 text-foreground hover:text-primary transition">
-              Shop
-            </Link>
-            <a href="#" className="block px-2 py-2 text-foreground hover:text-primary transition">
-              About
-            </a>
-            <a href="#" className="block px-2 py-2 text-foreground hover:text-primary transition">
-              Contact
-            </a>
-          </nav>
+          <div className="absolute top-16 left-0 w-full bg-background border-b border-border md:hidden z-40">
+            <nav className="px-4 py-4 space-y-2">
+              <Link href="/" className="block px-2 py-2 text-foreground hover:text-primary transition">
+                Home
+              </Link>
+              <Link href="/shop" className="block px-2 py-2 text-foreground hover:text-primary transition">
+                Shop
+              </Link>
+              <a href="#" className="block px-2 py-2 text-foreground hover:text-primary transition">
+                About
+              </a>
+              <a href="#" className="block px-2 py-2 text-foreground hover:text-primary transition">
+                Contact
+              </a>
+            </nav>
+          </div>
         )}
       </div>
     </header>

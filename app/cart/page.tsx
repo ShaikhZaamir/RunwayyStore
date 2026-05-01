@@ -13,6 +13,29 @@ export default function Cart() {
   const tax = subtotal * 0.1
   const finalTotal = subtotal + shipping + tax
 
+  async function handleCheckout() {
+    const res = await fetch('/api/orders', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: 'Test User',
+        address: 'Test Address',
+        city: 'Mumbai',
+        postal: '400001',
+        country: 'India',
+      }),
+    })
+
+    if (res.ok) {
+      alert('Order placed successfully!')
+      window.location.href = '/profile'
+    } else {
+      alert('Failed to place order')
+    }
+  }
+
   if (items.length === 0) {
     return (
       <div className="min-h-screen bg-background">
@@ -50,7 +73,7 @@ export default function Cart() {
                   {/* Image */}
                   <div className="relative w-24 h-24 flex-shrink-0 bg-secondary rounded-md overflow-hidden">
                     <Image
-                      src={item.image  || '/placeholder.png'}
+                      src={item.image || '/checked1.jpg'}
                       alt={item.name}
                       fill
                       className="object-cover"
@@ -141,10 +164,11 @@ export default function Cart() {
                 <span className="text-primary">₹{finalTotal.toFixed(2)}</span>
               </div>
 
-              <button className="w-full bg-primary text-primary-foreground py-3 rounded-lg font-semibold hover:bg-primary/90 transition">
-                <Link href="/checkout">
-                  Proceed to Checkout
-                </Link>
+              <button
+                onClick={() => (window.location.href = '/checkout')}
+                className="w-full bg-primary text-primary-foreground py-3 rounded-lg font-semibold hover:bg-primary/90 transition"
+              >
+                Proceed to Checkout
               </button>
 
               <Link href="/shop" className="block w-full border border-border py-3 rounded-lg font-semibold hover:bg-secondary transition text-center">

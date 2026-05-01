@@ -5,11 +5,11 @@ import { useRouter } from 'next/navigation'
 import Header from '@/components/Header'
 import Link from 'next/link'
 import { CheckCircle, Lock } from 'lucide-react'
-import { useAuth } from '@/lib/auth-context'
+import { useSession } from 'next-auth/react'
 
 export default function Checkout() {
   const router = useRouter()
-  const { user } = useAuth()
+  const { data: session, status } = useSession()
   const [step, setStep] = useState(1)
   const [formData, setFormData] = useState({
     email: '',
@@ -28,16 +28,17 @@ export default function Checkout() {
 
   // Prefill form with user data when user is available
   useEffect(() => {
-    if (user) {
-      const [firstName, ...lastNameParts] = user.name.split(' ')
+    if (session?.user) {
+      const [firstName, ...lastNameParts] = (session.user.name || '').split(' ')
+
       setFormData((prev) => ({
         ...prev,
-        email: user.email,
+        email: session.user.email || '',
         firstName: firstName || '',
         lastName: lastNameParts.join(' ') || '',
       }))
     }
-  }, [user])
+  }, [session])
 
   const [orderPlaced, setOrderPlaced] = useState(false)
 
@@ -46,14 +47,50 @@ export default function Checkout() {
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+
     if (step === 1) {
       setStep(2)
-    } else if (step === 2) {
+      return
+    }
+
+    if (step === 2) {
       setStep(3)
-    } else {
+      return
+    }
+
+    try {
+      const payload = {
+        name: `${formData.firstName} ${formData.lastName}`,
+        address: formData.address,
+        city: formData.city,
+        postal: formData.zip,
+        country: 'India',
+      }
+
+      console.log('SENDING:', payload) // 🔥 IMPORTANT
+
+      const res = await fetch('/api/orders', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      })
+
+      const text = await res.text() // 🔥 avoid JSON crash
+
+      console.log('RESPONSE:', res.status, text)
+
+      if (!res.ok) {
+        throw new Error(text)
+      }
+
       setOrderPlaced(true)
+    } catch (err) {
+      console.error(err)
+      alert('Failed to place order')
     }
   }
 
@@ -73,7 +110,7 @@ export default function Checkout() {
             <p className="text-sm text-muted-foreground mb-2">Order Number</p>
             <p className="text-2xl font-bold text-foreground mb-6">#ORD-{Math.floor(Math.random() * 1000000)}</p>
             <p className="text-sm text-muted-foreground">
-              A confirmation email has been sent to <span className="font-semibold">{user?.email}</span>
+              A confirmation email has been sent to <span className="font-semibold">{session?.user?.email}</span>
             </p>
           </div>
           <Link
@@ -88,7 +125,9 @@ export default function Checkout() {
   }
 
   // Redirect to login if not authenticated
-  if (!user) {
+  if (status === 'loading') return null
+
+  if (!session) {
     return (
       <div className="min-h-screen bg-background">
         <Header />
@@ -128,14 +167,12 @@ export default function Checkout() {
           {[1, 2, 3].map((s) => (
             <div key={s} className="flex-1">
               <div
-                className={`h-2 rounded-full mb-2 ${
-                  s <= step ? 'bg-primary' : 'bg-border'
-                }`}
+                className={`h-2 rounded-full mb-2 ${s <= step ? 'bg-primary' : 'bg-border'
+                  }`}
               />
               <p
-                className={`text-xs font-semibold ${
-                  s <= step ? 'text-primary' : 'text-muted-foreground'
-                }`}
+                className={`text-xs font-semibold ${s <= step ? 'text-primary' : 'text-muted-foreground'
+                  }`}
               >
                 {s === 1 && 'Shipping'}
                 {s === 2 && 'Billing'}
@@ -334,11 +371,10 @@ export default function Checkout() {
                 )}
                 <button
                   type="submit"
-                  className={`flex-1 py-3 rounded-lg font-semibold transition ${
-                    step === 3
-                      ? 'bg-primary text-primary-foreground hover:bg-primary/90'
-                      : 'bg-primary text-primary-foreground hover:bg-primary/90'
-                  }`}
+                  className={`flex-1 py-3 rounded-lg font-semibold transition ${step === 3
+                    ? 'bg-primary text-primary-foreground hover:bg-primary/90'
+                    : 'bg-primary text-primary-foreground hover:bg-primary/90'
+                    }`}
                 >
                   {step === 3 ? 'Place Order' : 'Continue'}
                 </button>

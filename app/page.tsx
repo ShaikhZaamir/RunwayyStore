@@ -2,6 +2,8 @@ import Header from '@/components/Header'
 import ProductCard from '@/components/ProductCard'
 import { ArrowRight, Truck, RotateCcw, Shield } from 'lucide-react'
 import Image from 'next/image'
+import MobileProductSlider from '@/components/MobileProductSlider'
+import Footer from '@/components/Footer'
 
 type Product = {
   id: string
@@ -64,10 +66,16 @@ export default async function Home() {
           <p className="text-muted-foreground">Explore our curated collection of trending styles</p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          {featuredProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
+        <div className="mb-8">
+          {/* Mobile Slider */}
+          <MobileProductSlider products={featuredProducts} />
+
+          {/* Desktop Grid (unchanged) */}
+          <div className="hidden sm:grid grid-cols-2 lg:grid-cols-4 gap-6">
+            {featuredProducts.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
         </div>
 
         <div className="text-center">
@@ -134,46 +142,8 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-foreground text-background py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-            <div>
-              <h3 className="font-bold text-lg mb-4">Runwayy</h3>
-              <p className="text-background/80 text-sm">Premium fashion for the modern wardrobe.</p>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">Shop</h4>
-              <ul className="space-y-2 text-sm text-background/80">
-                <li><a href="#" className="hover:text-background transition">All Products</a></li>
-                <li><a href="#" className="hover:text-background transition">New Arrivals</a></li>
-                <li><a href="#" className="hover:text-background transition">Sale</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">Support</h4>
-              <ul className="space-y-2 text-sm text-background/80">
-                <li><a href="#" className="hover:text-background transition">Contact Us</a></li>
-                <li><a href="#" className="hover:text-background transition">Shipping Info</a></li>
-                <li><a href="#" className="hover:text-background transition">Returns</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">Company</h4>
-              <ul className="space-y-2 text-sm text-background/80">
-                <li><a href="#" className="hover:text-background transition">About Us</a></li>
-                <li><a href="#" className="hover:text-background transition">Privacy Policy</a></li>
-                <li><a href="#" className="hover:text-background transition">Terms of Service</a></li>
-              </ul>
-            </div>
-          </div>
-          <div className="border-t border-background/20 pt-8">
-            <p className="text-center text-background/60 text-sm">
-              &copy; 2024 Runwayy Store. All rights reserved.
-            </p>
-          </div>
-        </div>
-      </footer>
+      {/* Footer  */}
+      <Footer />
     </div>
   )
 }

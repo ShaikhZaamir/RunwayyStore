@@ -22,7 +22,7 @@ export default function AddToCartButton({ product }: { product: any }) {
                         name: product.name,
                         price: product.price,
                         quantity: qty,
-                        image: product.image || '/placeholder.png',
+                        image: product.image || '/checked1.jpg',
                     })
                 }
                 className="bg-primary text-white px-6 py-3 rounded-lg"
