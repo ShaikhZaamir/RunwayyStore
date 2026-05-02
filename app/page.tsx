@@ -1,9 +1,11 @@
 import Header from '@/components/Header'
 import ProductCard from '@/components/ProductCard'
-import { ArrowRight, Truck, RotateCcw, Shield } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import Image from 'next/image'
 import MobileProductSlider from '@/components/MobileProductSlider'
 import Footer from '@/components/Footer'
+import Benefits from '@/components/Benefits'
+import Newsletter from '@/components/Newsletter'
 
 type Product = {
   id: string
@@ -88,61 +90,10 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Benefits Section */}
-      <section className="bg-secondary py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="flex flex-col items-center text-center">
-              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-                <Truck className="w-6 h-6 text-primary" />
-              </div>
-              <h3 className="font-semibold text-foreground mb-2">Free Shipping</h3>
-              <p className="text-muted-foreground text-sm">On orders over ₹50</p>
-            </div>
-            <div className="flex flex-col items-center text-center">
-              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-                <RotateCcw className="w-6 h-6 text-primary" />
-              </div>
-              <h3 className="font-semibold text-foreground mb-2">Easy Returns</h3>
-              <p className="text-muted-foreground text-sm">30-day return policy</p>
-            </div>
-            <div className="flex flex-col items-center text-center">
-              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-                <Shield className="w-6 h-6 text-primary" />
-              </div>
-              <h3 className="font-semibold text-foreground mb-2">Secure Payment</h3>
-              <p className="text-muted-foreground text-sm">100% secure checkout</p>
-            </div>
-          </div>
-        </div>
-      </section>
+      <Benefits />
 
-      {/* Newsletter Section */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="bg-primary/5 rounded-2xl p-8 md:p-12 text-center">
-          <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
-            Stay Updated
-          </h2>
-          <p className="text-muted-foreground mb-6 max-w-md mx-auto">
-            Subscribe to get special offers and be the first to know about new collections
-          </p>
-          <form className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-            <input
-              type="email"
-              placeholder="Enter your email"
-              className="flex-1 px-4 py-3 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary"
-            />
-            <button
-              type="submit"
-              className="bg-primary text-primary-foreground px-6 py-3 rounded-lg font-semibold hover:bg-primary/90 transition"
-            >
-              Subscribe
-            </button>
-          </form>
-        </div>
-      </section>
+      <Newsletter />
 
-      {/* Footer  */}
       <Footer />
     </div>
   )
